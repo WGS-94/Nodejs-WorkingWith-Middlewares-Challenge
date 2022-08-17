@@ -40,9 +40,15 @@ function checksCreateTodosUserAvailability(request, response, next) {
   return next();
 }
 
+// Middleware that checks if a todo is already created
 function checksTodoExists(request, response, next) {
   const { id } = request.params;
   const { user } = request;
+
+  // Verify if user exists
+  const userExists = users.find(user => user.username === username);
+  if(!userExists) return response.status(404).json({ error: "User not found" });
+
 
   const todoExists = user.todos.find(todo => todo.id === id)
 
