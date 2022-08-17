@@ -45,7 +45,7 @@ function checksTodoExists(request, response, next) {
   const { id } = request.params;
   const { user } = request;
 
-  // Verify if user exists
+  // Verify if user is already created
   const userExists = users.find(user => user.username === username);
   if(!userExists) return response.status(404).json({ error: "User not found" });
 
@@ -62,6 +62,7 @@ function checksTodoExists(request, response, next) {
   return next();
 }
 
+// Middleware to find user by ID
 function findUserById(request, response, next) {
   
   const { id } = request.params;
