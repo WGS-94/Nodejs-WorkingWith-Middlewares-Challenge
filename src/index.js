@@ -9,6 +9,7 @@ app.use(cors());
 
 const users = [];
 
+// Middleware that checks if User already exists
 function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
 
@@ -21,8 +22,22 @@ function checksExistsUserAccount(request, response, next) {
   return next();
 }
 
+// Middleware that checks if User can create a todo about his plan
+// Free: max of ten (10) todos
+// Pro: unlimited
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  
+  const { user } = request;
+
+  const userHasProPlan = user.pro;
+
+  const userFreeHasTenTodos = user.todos.length >= 10;
+
+  if(!userHasProPlan && userFreeHasTenTodos) {
+    return response.status(403).json({ error: "Limit reached, signing the Pro Plan"})
+  }
+
+  return next();
 }
 
 function checksTodoExists(request, response, next) {
