@@ -52,15 +52,21 @@ function checksTodoExists(request, response, next) {
 
   // Verify if user is already created
   const userExists = users.find(user => user.username === username);
-  if(!userExists) return response.status(404).json({ error: "User not found" });
+  if(!userExists) {
+    return response.status(404).json({ error: "User not found" });
+  }
 
   // Verify if ID is uuid type
   const isIdValided = validate(id);
-  if(!isIdValided) return response.status(400).json({ error: "Id not validated" });
+  if(!isIdValided) {
+    return response.status(400).json({ error: "Id not validated" });
+  }
 
   // Verificando se todo existe
   const todoExists = userExists.todos.find(todo => todo.id === id)
-  if(!todoExists) return response.status(404).json({ error: "Todo not found" });
+  if(!todoExists) {
+    return response.status(404).json({ error: "Todo not found" });
+  }
 
   request.user = userExists;
   request.todo = todoExists;
@@ -69,12 +75,16 @@ function checksTodoExists(request, response, next) {
 
 }
 
+// Middleware to find User by ID
 function findUserById(request, response, next) {
+  
   const { id } = request.params;
 
   const userExists = users.find(user => user.id === id);
 
-  if(!userExists) return response.status(404).json({ error: "User doesn't exists"});
+  if(!userExists) {
+    return response.status(404).json({ error: "User doesn't exists"});
+  }
 
   request.user = userExists;
 
@@ -82,9 +92,9 @@ function findUserById(request, response, next) {
 }
 
 
-/* ===== ROTAS ===== */
+/* ===== ROOUTES ===== */
 
-// Rotas de usuário
+// User Routes
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
 
@@ -125,8 +135,6 @@ app.patch('/users/:id/pro', findUserById, (request, response) => {
   return response.json(user);
 });
 
-
-// Rotas de todos
 app.get('/todos', checksExistsUserAccount, (request, response) => {
   const { user } = request;
 
