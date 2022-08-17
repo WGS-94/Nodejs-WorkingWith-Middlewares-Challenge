@@ -30,6 +30,7 @@ function checksExistsUserAccount(request, response, next) {
 // Free: max of ten (10) todos
 // Pro: unlimited
 function checksCreateTodosUserAvailability(request, response, next) {
+  
   const { user } = request;
 
   const userHasProPlan = user.pro;
@@ -43,15 +44,17 @@ function checksCreateTodosUserAvailability(request, response, next) {
   return next();
 }
 
+// Middleware that checks if a todo is already created
 function checksTodoExists(request, response, next) {
+  
   const { username } = request.headers;
   const { id } = request.params;
 
-  // Verificando se usuário existe
+  // Verify if user is already created
   const userExists = users.find(user => user.username === username);
   if(!userExists) return response.status(404).json({ error: "User not found" });
 
-  // Verificando se id é do tipo uuid
+  // Verify if ID is uuid type
   const isIdValided = validate(id);
   if(!isIdValided) return response.status(400).json({ error: "Id not validated" });
 
